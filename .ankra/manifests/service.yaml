@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ankra-notes
+  name: ankra-notes-v2
   labels:
-    app.kubernetes.io/name: ankra-notes
+    app.kubernetes.io/name: ankra-notes-v2
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: ankra-notes
+    app.kubernetes.io/name: ankra-notes-v2
   ports:
     - name: http
       port: 80

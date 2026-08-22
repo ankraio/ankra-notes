@@ -5,7 +5,7 @@
 apiVersion: ankra.io/v1
 kind: Application
 metadata:
-  name: "ankra-notes"
+  name: "ankra-notes-v2"
   version: "0.1.0"
   app_version: "0.1.0"
   description: "Notes API (Express + Postgres + a real secret) used to exercise the Ankra application flow end to end"

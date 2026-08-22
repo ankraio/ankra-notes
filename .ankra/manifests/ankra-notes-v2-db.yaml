@@ -1,9 +1,9 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: ankra-notes-db
+  name: ankra-notes-v2-db
   labels:
-    app.kubernetes.io/name: ankra-notes-db
+    app.kubernetes.io/name: ankra-notes-v2-db
     app.kubernetes.io/managed-by: ankra
 spec:
   instances: ${{ ankra.database_instances }}
@@ -12,7 +12,7 @@ spec:
     size: ${{ ankra.database_storage }}
   bootstrap:
     initdb:
-      database: ankra-notes-db
-      owner: ankra-notes-db
+      database: ankra-notes-v2-db
+      owner: ankra-notes-v2-db
   primaryUpdateStrategy: unsupervised
   enableSuperuserAccess: false
