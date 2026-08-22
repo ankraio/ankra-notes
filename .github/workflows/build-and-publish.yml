@@ -14,9 +14,9 @@ name: Build and Publish
 
 on:
   push:
-    branches: [main]
+    branches: [ankra-1nx8q.33-checkov-probe]
   pull_request:
-    branches: [main]
+    branches: [ankra-1nx8q.33-checkov-probe]
 
 env:
   REGISTRY: registry.ankra.cloud
@@ -66,26 +66,45 @@ jobs:
           fi
 
       - name: Run Checkov IaC scan
+        id: checkov
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: .
           output_format: json
-          output_file_path: checkov-results.json
+          output_file_path: checkov-results
           soft_fail: true
           framework: dockerfile,helm,github_actions
 
       - name: Upload Checkov results
         uses: actions/upload-artifact@v4
-        if: always() && hashFiles('checkov-results.json') != ''
+        if: always() && hashFiles('checkov-results/results_json.json') != ''
         with:
           name: ankra-checkov-scan
-          path: checkov-results.json
+          path: checkov-results/results_json.json
           retention-days: 90
 
       - name: Check Checkov findings
-        if: always() && hashFiles('checkov-results.json') != ''
+        if: always() && steps.checkov.outcome != 'skipped'
         run: |
-          failed=$(jq '[.. | objects | select(has("results")) | .results.failed_checks // []] | flatten | length' checkov-results.json)
+          report=checkov-results/results_json.json
+          if [ ! -f "$report" ]; then
+            {
+              echo "### Checkov"
+              echo ""
+              echo "UNKNOWN - the scan wrote no report to $report, so no verdict was read. This is not a clean scan."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::Checkov wrote no JSON report to $report, so the IaC scan result is UNKNOWN, not zero findings."
+            exit 1
+          fi
+          if ! failed=$(jq '[.. | objects | select(has("results")) | .results.failed_checks // []] | flatten | length' "$report"); then
+            {
+              echo "### Checkov"
+              echo ""
+              echo "UNKNOWN - $report could not be parsed, so no verdict was read. This is not a clean scan."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::could not parse the Checkov report at $report, so the IaC scan result is UNKNOWN, not zero findings."
+            exit 1
+          fi
           {
             echo "### Checkov"
             echo ""
@@ -96,7 +115,7 @@ jobs:
           fi
 
       - name: Check Checkov chart coverage
-        if: always() && hashFiles('checkov-results.json') != ''
+        if: always() && hashFiles('checkov-results/results_json.json') != ''
         run: |
           if [ -z "$(find . -name Chart.yaml -not -path '*/charts/*' -print -quit)" ]; then
             exit 0
