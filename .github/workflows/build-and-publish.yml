@@ -66,7 +66,7 @@ jobs:
           fi
 
       - name: Run Checkov IaC scan
-        id: checkov
+        id: ankra_checkov_scan
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: .
@@ -84,7 +84,7 @@ jobs:
           retention-days: 90
 
       - name: Check Checkov findings
-        if: always() && steps.checkov.outcome != 'skipped'
+        if: always() && steps.ankra_checkov_scan.outcome != 'skipped'
         run: |
           report=checkov-results/results_json.json
           if [ ! -f "$report" ]; then
