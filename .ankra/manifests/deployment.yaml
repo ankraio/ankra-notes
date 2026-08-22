@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ankra-notes-v2
+  name: ankra-notes
   labels:
-    app.kubernetes.io/name: ankra-notes-v2
+    app.kubernetes.io/name: ankra-notes
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: ankra-notes-v2
+      app.kubernetes.io/name: ankra-notes
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: ankra-notes-v2
+        app.kubernetes.io/name: ankra-notes
     spec:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
+        runAsUser: 10001
+        fsGroup: 10001
       imagePullSecrets:
         - name: ankra-registry-pull
       containers:
-        - name: ankra-notes-v2
-          image: registry.ankra.cloud/org-7b2fedb6-4d79-45fd-b71a-044a2cfddce7/ankra-notes:${{ ankra.image_tag }}
+        - name: ankra-notes
+          image: registry.ankra.cloud/org-3b7dccca-0788-4470-9910-19478ae345ae/ankra-notes:${{ ankra.image_tag }}
           imagePullPolicy: IfNotPresent
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: 10001
             capabilities:
               drop:
                 - ALL
@@ -37,15 +37,10 @@ spec:
               containerPort: 3000
               protocol: TCP
           env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: ankra-notes-v2-db-app
-                  key: uri
             - name: PREVIEW_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: ankra-notes-v2-env
+                  name: ankra-notes-env
                   key: PREVIEW_API_KEY
                   optional: true
           volumeMounts:
