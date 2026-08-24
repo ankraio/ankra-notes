@@ -37,6 +37,36 @@ spec:
               containerPort: 3000
               protocol: TCP
           env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ankra-notes-v2-db-app
+                  key: uri
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: ankra-notes-v2-db-app
+                  key: dbname
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: ankra-notes-v2-db-app
+                  key: host
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ankra-notes-v2-db-app
+                  key: password
+            - name: PGPORT
+              valueFrom:
+                secretKeyRef:
+                  name: ankra-notes-v2-db-app
+                  key: port
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: ankra-notes-v2-db-app
+                  key: username
             - name: PREVIEW_API_KEY
               valueFrom:
                 secretKeyRef:
