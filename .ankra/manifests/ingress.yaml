@@ -1,9 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ankra-notes-v2
+  name: ankra-notes
   labels:
-    app.kubernetes.io/name: ankra-notes-v2
+    app.kubernetes.io/name: ankra-notes
   annotations:
     ankra.io/generated: "true"
     cert-manager.io/cluster-issuer: ${{ ankra.ingress_tls_issuer }}
@@ -12,7 +12,7 @@ spec:
   tls:
     - hosts:
         - ${{ ankra.ingress_host }}
-      secretName: ankra-notes-v2-tls
+      secretName: ankra-notes-tls
   rules:
     - host: ${{ ankra.ingress_host }}
       http:
@@ -21,6 +21,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: ankra-notes-v2
+                name: ankra-notes
                 port:
                   number: 80
