@@ -150,7 +150,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: registry.ankra.cloud/org-7b2fedb6-4d79-45fd-b71a-044a2cfddce7/ankra-notes
+          images: registry.ankra.cloud/org-3b7dccca-0788-4470-9910-19478ae345ae/ankra-notes
           tags: |
             type=sha
             type=ref,event=branch
@@ -181,7 +181,7 @@ jobs:
           TRIVY_USERNAME: ${{ secrets.ANKRA_REGISTRY_USERNAME }}
           TRIVY_PASSWORD: ${{ secrets.ANKRA_REGISTRY_PASSWORD }}
         with:
-          image-ref: registry.ankra.cloud/org-7b2fedb6-4d79-45fd-b71a-044a2cfddce7/ankra-notes:sha-${{ steps.vars.outputs.short_sha }}
+          image-ref: registry.ankra.cloud/org-3b7dccca-0788-4470-9910-19478ae345ae/ankra-notes:sha-${{ steps.vars.outputs.short_sha }}
           format: json
           output: trivy-results.json
           severity: CRITICAL,HIGH,MEDIUM,LOW
